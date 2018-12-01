@@ -2,8 +2,10 @@ package masterung.androidthai.in.th.demotestprint;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 
@@ -38,6 +41,7 @@ public class AuthenFragment extends Fragment {
     private void loginController() {
         Button button = getView().findViewById(R.id.btnLogin);
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
 
@@ -75,7 +79,7 @@ public class AuthenFragment extends Fragment {
                             String truePassword = convertMD5toString(jsonObject.getString("pass"));
                             Log.d("25novV1", "truePassword ==> " + truePassword);
 
-                            if (passwordString.equals(truePassword)) {
+                            if (checkPassword(passwordString, jsonObject.getString("pass"))) {
                                 Intent intent = new Intent(getActivity(), ServiceActivity.class);
                                 intent.putExtra("Login", resultJSoN);
                                 startActivity(intent);
@@ -95,6 +99,39 @@ public class AuthenFragment extends Fragment {
             }
         });
 
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private boolean checkPassword(String passwordString, String md5TruePasswordString) {
+
+        boolean result = false;
+        String tag = "1decV1";
+        Log.d(tag, "md5TruePassword ==> " + md5TruePasswordString);
+
+        try {
+
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] bytes = messageDigest.digest(passwordString.getBytes(StandardCharsets.UTF_8));
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (byte b : bytes) {
+                stringBuilder.append(String.format("%02x", b));
+            }
+            Log.d(tag, "md5UserPassword ==> " + stringBuilder);
+
+            if (md5TruePasswordString.equals(stringBuilder.toString().trim())) {
+                result = true;
+                Log.d(tag, "Result True");
+            }
+
+            Log.d(tag, "result ==> " + result);
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return result;
+        }
 
     }
 
