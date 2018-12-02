@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class BillDetailFragment extends Fragment {
 
-    private String idBillString;
+    private String idBillString, timeString, zoneString, deskString;
     private String tag = "2decV2";
     private MyConstant myConstant = new MyConstant();
 
@@ -33,11 +33,17 @@ public class BillDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static BillDetailFragment billDetailInstance(String idString) {
+    public static BillDetailFragment billDetailInstance(String idString,
+                                                        String timeString,
+                                                        String zoneString,
+                                                        String deskString) {
 
         BillDetailFragment billDetailFragment = new BillDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString("idBill", idString);
+        bundle.putString("Time", timeString);
+        bundle.putString("Zone", zoneString);
+        bundle.putString("Desk", deskString);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -52,8 +58,20 @@ public class BillDetailFragment extends Fragment {
 //        Create Detail
         createDetail();
 
+//        Show Text
+        showText();
 
     }   // Main Method
+
+    private void showText() {
+        TextView liftTextView = getView().findViewById(R.id.txtLeft);
+        TextView rightTextView = getView().findViewById(R.id.txtRight);
+
+        liftTextView.setText(timeString + " " + "Other");
+        rightTextView.setText("Zone " + zoneString + " " + "Desk " + deskString);
+
+
+    }
 
     private void createDetail() {
 
@@ -105,6 +123,9 @@ public class BillDetailFragment extends Fragment {
 
     private void getOID() {
         idBillString = getArguments().getString("idBill");
+        timeString = getArguments().getString("Time");
+        zoneString = getArguments().getString("Zone");
+        deskString = getArguments().getString("Desk");
         Log.d(tag, "idBill ==> " + idBillString);
     }
 
