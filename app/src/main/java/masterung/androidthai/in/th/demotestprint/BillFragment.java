@@ -56,6 +56,7 @@ public class BillFragment extends Fragment {
         ArrayList<String> detail1StringArrayList = new ArrayList<>();
         ArrayList<String> detail2StringArrayList = new ArrayList<>();
         ArrayList<String> detail3StringArrayList = new ArrayList<>();
+        final ArrayList<String> idBillStringArrayList = new ArrayList<>();
 
         try {
 
@@ -73,12 +74,26 @@ public class BillFragment extends Fragment {
                 detail1StringArrayList.add(jsonObject.getString("aby"));
                 detail2StringArrayList.add(jsonObject.getString("adate"));
                 detail3StringArrayList.add(jsonObject.getString("price"));
+                idBillStringArrayList.add(jsonObject.getString("id"));
 
             }   // for
 
             BillRecyclerViewAdapter billRecyclerViewAdapter = new BillRecyclerViewAdapter(getActivity(),
                     zoneStringArrayList, deskStringArrayList, detail1StringArrayList,
-                    detail2StringArrayList, detail3StringArrayList);
+                    detail2StringArrayList, detail3StringArrayList, new OnClickItem() {
+                @Override
+                public void onClickItem(View view, int position) {
+                    Log.d("2decV2", "You Click ==> " + position);
+
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.contentServiceFragment,
+                                    BillDetailFragment.billDetailInstance(idBillStringArrayList.get(position)))
+                            .addToBackStack(null)
+                            .commit();
+
+                }
+            });
             recyclerView.setAdapter(billRecyclerViewAdapter);
 
         } catch (Exception e) {

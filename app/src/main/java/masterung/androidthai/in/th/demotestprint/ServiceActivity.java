@@ -1,5 +1,6 @@
 package masterung.androidthai.in.th.demotestprint;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -47,6 +48,17 @@ public class ServiceActivity extends AppCompatActivity {
         }
 
     }   // Main Method
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
